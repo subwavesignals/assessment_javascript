@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Skills JavaScript</title>
   <link rel="stylesheet" href="/static/styles.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery.js"></script>
 </head>
 <body>
 
@@ -77,7 +78,8 @@
 
   formButton.addEventListener('click', function (evt){
       evt.preventDefault();
-      alert('Your favorite color has been submitted.');
+      var favColor = $('#favorite-color-field').val();
+      alert('Your favorite color ' + favColor +  ' has been submitted.');
       });
 
 </script>
@@ -105,22 +107,23 @@
 <script>
   "use strict";
 
-//  Here's a stub of a function you can use!
+ // Here's a stub of a function you can use!
 
-//  function reverseString() {
-//    var msg = "Porcupines are cute";
-//
-//    // do some stuff here to reverse that string into a new variable
-//    var newMsg = "This should be the reversed string";
-//
-//    alert(newMsg);
-//  }
+  function reverseString() {
+    var msg = "Porcupines are cute";
+    var newMsg = "";
 
-// Here's a stub of event stuff you could use
-//
+    //iterate through string backwards to make new string
+    for (var i = msg.length - 1; i >= 0; i--) {
+      newMsg = newMsg + msg[i];
+    }
 
-//  var button = document.getElementById('reverse-string-button');
-//  button.addEventListener('click', reverseString);
+    alert(newMsg);
+   }
+
+  // Here's a stub of event stuff you could use
+  var button = document.getElementById('reverse-string-button');
+  button.addEventListener('click', reverseString);
 </script>
 
 
@@ -151,7 +154,11 @@
 
 <script>
   "use strict";
-  // put your code here
+  
+  $('#kittenz-rule').on('dblclick', function () {
+      $('#kittenz-rule').attr('src', 'https://s-media-cache-ak0.pinimg.com/736x/2e/b9/1a/2eb91a76325d9c406ab97e981990ad78.jpg');
+  });
+
 </script>
 
 <div class="hint">
@@ -182,7 +189,43 @@
 
 <script>
   "use strict";
-  // put your code here
+
+  function startGame() {
+    //enable/disable buttons and form; set display message
+    $('#play-guessing-game').prop('disabled', true);
+    $('#number-guessed').prop('disabled', false);
+    $('#try-this-number').prop('disabled', false);
+    $('#number-guessing-msg').html('Guess a number between 1 and 100.');
+
+    //pick a random number between 1 and 100
+    var correctNum = Math.floor(Math.random() * 100 + 1);
+
+    //add listener to guess button which calls a function to evaluate the input
+    $('#try-this-number').on('click', 
+      function playGame(evt) {
+        evt.preventDefault();
+
+        var guessNum = $('#number-guessed').val();
+
+        if (guessNum == correctNum) {
+          //disable/enable buttons and form; display message of victory
+          $('#number-guessing-msg').html('Correct! Press Play to play again.');
+          $('#play-guessing-game').prop('disabled', false);
+          $('#number-guessed').prop('disabled', true);
+          $('#try-this-number').prop('disabled', true);
+        } else if (guessNum > correctNum) {
+          //Too high
+          $('#number-guessing-msg').html('Too high. Guess again.');
+        } else {
+          //Too low
+          $('#number-guessing-msg').html('Too low. Guess again.');
+        }
+      }
+    );
+  }
+
+  $('#play-guessing-game').on('click', startGame);
+
 </script>
 
 
@@ -247,7 +290,17 @@
     $("#t-rex-img").append(tRexPhoto);
   }
 
-  // put your code here
+  //event listener on attack button
+  $('#Attack').on('click', 
+    function (evt) {
+      //prevent submission and pick up the form values
+      evt.preventDefault();
+      var formInputs = {'victim-name' : $('#victim-name').val()};
+
+      //send POST request to json route and call function to show results
+      $.post('/t-rex-attack.json', formInputs, showTRexResults);
+    }
+  );
 
 </script>
 
